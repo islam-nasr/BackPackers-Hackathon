@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const path = require("path");
 const app = express();
 const db = require("./config/keys").mongoURI;
@@ -19,6 +20,8 @@ app.use(
     extended: false
   })
 );
+// Cors
+app.use(cors());
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {
   // Set static folder
@@ -30,7 +33,13 @@ if (process.env.NODE_ENV === "production") {
 // Entry point
 app.get("/", (req, res) => res.send(`<h1>Welcome to Backpackers</h1>`));
 // Use Routes
-
+app.use("/api/offers", require("./api/routes/offer.router"));
+app.use("/api/places", require("./api/routes/place.router"));
+app.use("/api/ratings", require("./api/routes/rating.router"));
+app.use("/api/searches", require("./api/routes/search.router"));
+app.use("/api/tourguides", require("./api/routes/tourguide.router"));
+app.use("/api/tourists", require("./api/routes/tourist.router"));
+app.use("/api/trips", require("./api/routes/trip.router"));
 // Wrong path
 app.use((req, res) =>
   res.status(404).send(`<h1>Can not find what you're looking for</h1>`)
